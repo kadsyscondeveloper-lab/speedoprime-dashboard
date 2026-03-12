@@ -5,7 +5,7 @@ import { PageHeader, Table, Badge, Btn, Modal, Input, Select, toast } from '../c
 
 const PLACEMENTS = ['home_top','home_mid','home_bottom','search']
 const TYPES = ['banner','interstitial','pre_roll']
-const empty = { title:'', ad_type:'banner', target_url:'', placement:'home_top', duration_secs:15, start_date:'', end_date:'' }
+const empty = { title:'', ad_type:'banner', image_url:'', target_url:'', placement:'home_top', duration_secs:15, start_date:'', end_date:'' }
 
 export default function Ads() {
   const [rows,    setRows]    = useState([])
@@ -28,7 +28,9 @@ export default function Ads() {
   const openEdit   = r => {
     setEditing(r.ad_id)
     setForm({
-      title: r.title, ad_type: r.ad_type, target_url: r.target_url || '',
+      title: r.title, ad_type: r.ad_type,
+      image_url: r.image_url || '',
+      target_url: r.target_url || '',
       placement: r.placement || 'home_top', duration_secs: r.duration_secs || 15,
       start_date: r.start_date ? r.start_date.split('T')[0] : '',
       end_date:   r.end_date   ? r.end_date.split('T')[0]   : '',
@@ -39,8 +41,9 @@ export default function Ads() {
   const save = async () => {
     setSaving(true)
     try {
-      if (editing) await api.put(`/ads/${editing}`, form)
-      else {
+      if (editing) {
+        await api.put(`/ads/${editing}`, form)
+      } else {
         const fd = new FormData()
         Object.entries(form).forEach(([k,v]) => v && fd.append(k, v))
         await api.post('/ads', fd)
@@ -62,7 +65,15 @@ export default function Ads() {
   const ctr = r => r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(2) + '%' : '—'
 
   const cols = [
-    { key:'title',     label:'Title',     width:'20%', render: r => <span style={{ fontWeight:600 }}>{r.title}</span> },
+    { key:'title', label:'Title', width:'18%', render: r => (
+      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+        {r.image_url
+          ? <img src={r.image_url} style={{ width:48, height:28, borderRadius:4, objectFit:'cover', flexShrink:0 }} onError={e => e.target.style.display='none'} />
+          : <div style={{ width:48, height:28, background:'var(--surface2)', borderRadius:4, flexShrink:0 }} />
+        }
+        <span style={{ fontWeight:600 }}>{r.title}</span>
+      </div>
+    )},
     { key:'ad_type',   label:'Type',      width:'10%', render: r => <Badge label={r.ad_type} color="var(--blue)" /> },
     { key:'placement', label:'Placement', width:'12%', render: r => <Badge label={r.placement || '—'} color="var(--text3)" /> },
     { key:'impressions',label:'Impressions', width:'10%', render: r => (
@@ -121,7 +132,16 @@ export default function Ads() {
             {PLACEMENTS.map(p => <option key={p}>{p}</option>)}
           </Select>
           <div style={{ gridColumn:'1/-1' }}>
-            <Input label="Target URL" value={form.target_url} onChange={f('target_url')} placeholder="https://..." />
+            <Input label="Banner Image URL" value={form.image_url} onChange={f('image_url')} placeholder="https://example.com/banner.jpg" />
+          </div>
+          {/* Live preview */}
+          {form.image_url ? (
+            <div style={{ gridColumn:'1/-1', borderRadius:8, overflow:'hidden', height:90, background:'var(--surface2)', border:'1px solid var(--border)' }}>
+              <img src={form.image_url} style={{ width:'100%', height:'100%', objectFit:'cover' }} onError={e => e.target.style.opacity=0.2} />
+            </div>
+          ) : null}
+          <div style={{ gridColumn:'1/-1' }}>
+            <Input label="Target URL (click destination)" value={form.target_url} onChange={f('target_url')} placeholder="https://..." />
           </div>
           <Input label="Duration (secs)" type="number" value={form.duration_secs} onChange={f('duration_secs')} />
           <div />
