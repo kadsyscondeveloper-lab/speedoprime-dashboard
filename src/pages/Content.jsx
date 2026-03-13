@@ -787,7 +787,7 @@ api.get(`/content/${r.content_id}`).then(res => {
           onChange={val => setForm(p => ({ ...p, category_ids: val }))}
         />
 
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', gap: 20, justifyContent: 'flex-end', marginTop: 30, paddingTop: 30, borderTop: '1px solid var(--border)' }}>
           <Btn variant="ghost" onClick={() => setModal(false)}>Cancel</Btn>
           <Btn onClick={save} disabled={saving}>{saving ? 'Saving…' : editing ? 'Update' : 'Create'}</Btn>
         </div>
