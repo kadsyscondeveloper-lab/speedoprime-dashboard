@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   LayoutDashboard, Film, Users, Tag, Megaphone,
-  CreditCard, LogOut, ChevronLeft, ChevronRight, Play, LayoutTemplate
+  CreditCard, LogOut, ChevronLeft, ChevronRight, Play, LayoutTemplate, Radio
 } from 'lucide-react'
 
 const NAV = [
@@ -14,7 +14,8 @@ const NAV = [
   { to: '/ads',           icon: Megaphone,       label: 'Ads' },
   { to: '/subscriptions', icon: CreditCard,      label: 'Subscriptions' },
   { to: '/homescreen',    icon: LayoutTemplate,  label: 'Home Screen' },
-  { to: '/speedotube', icon: Play, label: 'SpeedoTube' },
+  { to: '/speedotube',    icon: Play,            label: 'SpeedoTube' },
+  { to: '/speedoads',     icon: Radio,           label: 'SpeedoAds',  accent: true },
 ]
 
 export default function Layout() {
@@ -41,12 +42,18 @@ export default function Layout() {
 
         {/* Nav */}
         <nav style={s.nav}>
-          {NAV.map(({ to, icon: Icon, label }) => (
+          {NAV.map(({ to, icon: Icon, label, accent }) => (
             <NavLink key={to} to={to} style={({ isActive }) => ({
               ...s.navItem,
-              background: isActive ? 'rgba(255,45,85,0.12)' : 'transparent',
-              color: isActive ? 'var(--accent)' : 'var(--text2)',
-              borderLeft: isActive ? '3px solid var(--accent)' : '3px solid transparent',
+              background: isActive
+                ? accent ? 'rgba(255,107,53,0.12)' : 'rgba(255,45,85,0.12)'
+                : 'transparent',
+              color: isActive
+                ? accent ? '#FF6B35' : 'var(--accent)'
+                : 'var(--text2)',
+              borderLeft: isActive
+                ? `3px solid ${accent ? '#FF6B35' : 'var(--accent)'}`
+                : '3px solid transparent',
             })}>
               <Icon size={18} strokeWidth={1.8} />
               {!collapsed && <span style={s.navLabel}>{label}</span>}
