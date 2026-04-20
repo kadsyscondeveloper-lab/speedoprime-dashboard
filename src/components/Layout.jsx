@@ -14,6 +14,7 @@ const NAV = [
   { to: '/ads',           icon: Megaphone,       label: 'Ads' },
   { to: '/subscriptions', icon: CreditCard,      label: 'Subscriptions' },
   { to: '/homescreen',    icon: LayoutTemplate,  label: 'Home Screen' },
+  { to: '/speedotube', icon: Play, label: 'SpeedoTube' },
 ]
 
 export default function Layout() {

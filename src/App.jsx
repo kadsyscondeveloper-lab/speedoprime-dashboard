@@ -11,6 +11,7 @@ import Categories from './pages/Categories'
 import Ads from './pages/Ads'
 import Subscriptions from './pages/Subscriptions'
 import HomeScreen from './pages/HomeScreen'
+import SpeedoTube from './pages/SpeedoTube'
 
 function Guard({ children }) {
   const { user, loading } = useAuth()
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="ads" element={<Ads />} />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="homescreen" element={<HomeScreen />} />
+            <Route path="speedotube" element={<SpeedoTube />} />
           </Route>
         </Routes>
       </BrowserRouter>
